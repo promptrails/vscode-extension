@@ -1,0 +1,14 @@
+.vscode/**
+.github/**
+src/**
+webview/**
+node_modules/**
+.eslintrc.json
+.prettierrc
+tsconfig.json
+tsconfig.webview.json
+esbuild.js
+esbuild.webview.js
+tailwind.config.ts
+postcss.config.js
+**/*.map

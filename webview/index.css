@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: var(--vscode-editor-background);
+  --fg: var(--vscode-editor-foreground);
+  --border: var(--vscode-panel-border, var(--vscode-widget-border, #444));
+  --input-bg: var(--vscode-input-background);
+  --input-fg: var(--vscode-input-foreground);
+  --input-border: var(--vscode-input-border, #444);
+  --btn-bg: var(--vscode-button-background);
+  --btn-fg: var(--vscode-button-foreground);
+  --btn-hover: var(--vscode-button-hoverBackground);
+  --btn-secondary-bg: var(--vscode-button-secondaryBackground);
+  --btn-secondary-fg: var(--vscode-button-secondaryForeground);
+  --accent: var(--vscode-focusBorder);
+  --sidebar-bg: var(--vscode-sideBar-background, var(--bg));
+  --badge-bg: var(--vscode-badge-background);
+  --badge-fg: var(--vscode-badge-foreground);
+  --error: var(--vscode-errorForeground, #f44);
+  --muted: var(--vscode-descriptionForeground, #888);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--vscode-font-family, system-ui, sans-serif);
+  font-size: var(--vscode-font-size, 13px);
+  line-height: 1.5;
+  overflow: hidden;
+  height: 100vh;
+}
+
+#root {
+  height: 100%;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--vscode-scrollbarSlider-background);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--vscode-scrollbarSlider-hoverBackground);
+}
+
+/* Common utility classes using VS Code theme vars */
+.bg-vscode {
+  background: var(--bg);
+}
+.bg-sidebar {
+  background: var(--sidebar-bg);
+}
+.bg-input {
+  background: var(--input-bg);
+}
+.text-fg {
+  color: var(--fg);
+}
+.text-muted {
+  color: var(--muted);
+}
+.text-error {
+  color: var(--error);
+}
+.border-vscode {
+  border-color: var(--border);
+}
+.btn-primary {
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  border: none;
+  padding: 6px 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.btn-primary:hover {
+  background: var(--btn-hover);
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn-secondary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-fg);
+  border: none;
+  padding: 6px 14px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.input-field {
+  background: var(--input-bg);
+  color: var(--input-fg);
+  border: 1px solid var(--input-border);
+  padding: 6px 8px;
+  border-radius: 2px;
+  font-size: 13px;
+  font-family: var(--vscode-editor-font-family, monospace);
+  width: 100%;
+  outline: none;
+}
+.input-field:focus {
+  border-color: var(--accent);
+}
+.badge {
+  background: var(--badge-bg);
+  color: var(--badge-fg);
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+/* Syntax highlighting — matches VS Code dark+ theme tokens */
+.syn-key {
+  color: #9cdcfe;
+}
+.syn-str {
+  color: #ce9178;
+}
+.syn-num {
+  color: #b5cea8;
+}
+.syn-bool {
+  color: #569cd6;
+}
+.syn-kw {
+  color: #c586c0;
+}
+.syn-builtin {
+  color: #4ec9b0;
+}
+.syn-comment {
+  color: #6a9955;
+  font-style: italic;
+}
