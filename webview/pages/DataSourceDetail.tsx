@@ -214,9 +214,7 @@ export function DataSourceDetail({ id, navigate }: DataSourceDetailProps) {
       )}
 
       {/* SDK Examples Tab */}
-      {tab === "sdk" && (
-        <SdkExamples examples={dataSourceQueryExamples(id, dataSource.name)} />
-      )}
+      {tab === "sdk" && <SdkExamples examples={dataSourceQueryExamples(id)} />}
     </div>
   );
 }

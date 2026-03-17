@@ -204,7 +204,7 @@ export function PromptDetail({ id, navigate }: PromptDetailProps) {
       )}
 
       {/* SDK Examples Tab */}
-      {tab === "sdk" && <SdkExamples examples={promptRunExamples(id, prompt.name)} />}
+      {tab === "sdk" && <SdkExamples examples={promptRunExamples(id)} />}
     </div>
   );
 }

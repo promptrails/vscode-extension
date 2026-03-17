@@ -14,7 +14,6 @@ export type WebviewMessage =
       llmModelId?: string;
       input?: Record<string, unknown>;
     }
-  | { type: "previewPrompt"; promptId: string; input: Record<string, unknown> }
   | { type: "getPromptVersions"; promptId: string }
   | { type: "promotePromptVersion"; promptId: string; versionId: string }
   | { type: "getDataSources"; page: number }

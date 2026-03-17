@@ -55,7 +55,6 @@ export class PanelManager {
   }
 
   private async handleMessage(msg: WebviewMessage): Promise<void> {
-    console.log("[PanelManager] received message:", msg.type);
     try {
       switch (msg.type) {
         case "getAuthStatus":
@@ -103,11 +102,6 @@ export class PanelManager {
               llm_model_id: msg.llmModelId || "",
               ...(msg.input ? { input: msg.input } : {}),
             }),
-          );
-
-        case "previewPrompt":
-          return this.proxyCall(msg.type, async (sdk) =>
-            sdk.prompts.preview(msg.promptId, { input: msg.input }),
           );
 
         case "getPromptVersions":
@@ -175,11 +169,9 @@ export class PanelManager {
 
     try {
       const data = await fn(sdk);
-      console.log("[PanelManager] success:", requestType);
       this.postMessage({ type: "response", requestType, data });
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
-      console.error("[PanelManager] error:", requestType, message);
       this.postMessage({
         type: "response",
         requestType,

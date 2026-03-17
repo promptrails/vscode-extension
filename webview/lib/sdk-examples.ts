@@ -46,10 +46,7 @@ func main() {
   };
 }
 
-export function promptRunExamples(
-  promptId: string,
-  _promptName: string,
-): Record<Lang, string> {
+export function promptRunExamples(promptId: string): Record<Lang, string> {
   return {
     javascript: `import { PromptRails } from "@promptrails/sdk";
 
@@ -94,10 +91,7 @@ func main() {
   };
 }
 
-export function dataSourceQueryExamples(
-  dsId: string,
-  _dsName: string,
-): Record<Lang, string> {
+export function dataSourceQueryExamples(dsId: string): Record<Lang, string> {
   return {
     javascript: `import { PromptRails } from "@promptrails/sdk";
 

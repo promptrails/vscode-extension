@@ -58,32 +58,6 @@ export function useRunPrompt() {
   return { result, loading, error, run };
 }
 
-export function usePreviewPrompt() {
-  const [result, setResult] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const preview = useCallback(async (promptId: string, input: object) => {
-    setLoading(true);
-    setError(null);
-    setResult(null);
-    try {
-      const data = await request<any>({
-        type: "previewPrompt",
-        promptId,
-        input,
-      });
-      setResult(data);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  return { result, loading, error, preview };
-}
-
 export function usePromptVersions(promptId: string) {
   const [versions, setVersions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
