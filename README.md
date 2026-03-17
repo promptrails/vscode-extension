@@ -2,6 +2,10 @@
 
 Run agents, test prompts, query data sources, and manage versions — all from VS Code.
 
+## Installation
+
+Install from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=promptrails.promptrails) or search for **PromptRails** in the VS Code Extensions panel (`Ctrl+Shift+X` / `Cmd+Shift+X`).
+
 ## Features
 
 - **Agents** — Execute agents with JSON input, view output and trace trees
