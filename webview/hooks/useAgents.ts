@@ -1,5 +1,6 @@
-import { useState, useCallback } from "react";
-import { request } from "../vscode";
+import { useState, useCallback, useEffect } from "react";
+import type { StreamEvent } from "@promptrails/sdk";
+import { request, onMessage } from "../vscode";
 
 export function useAgentDetail(id: string) {
   const [agent, setAgent] = useState<any>(null);
@@ -24,13 +25,30 @@ export function useAgentDetail(id: string) {
 
 export function useExecuteAgent() {
   const [result, setResult] = useState<any>(null);
+  const [events, setEvents] = useState<StreamEvent[]>([]);
+  const [executionId, setExecutionId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Appends stream frames pushed by the extension host while the
+  // execution is in flight. The effect is stable for the lifetime of
+  // the hook — the listener filters on message shape.
+  useEffect(() => {
+    return onMessage((msg: any) => {
+      if (msg?.type === "executionStarted") {
+        setExecutionId(msg.executionId);
+      } else if (msg?.type === "executionEvent" && msg.event) {
+        setEvents((prev) => [...prev, msg.event as StreamEvent]);
+      }
+    });
+  }, []);
 
   const execute = useCallback(async (agentId: string, input: object) => {
     setLoading(true);
     setError(null);
     setResult(null);
+    setEvents([]);
+    setExecutionId(null);
     try {
       const data = await request<any>({ type: "executeAgent", agentId, input });
       setResult(data);
@@ -41,7 +59,7 @@ export function useExecuteAgent() {
     }
   }, []);
 
-  return { result, loading, error, execute };
+  return { result, events, executionId, loading, error, execute };
 }
 
 export function useAgentVersions(agentId: string) {

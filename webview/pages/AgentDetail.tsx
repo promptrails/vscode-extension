@@ -5,6 +5,7 @@ import type { Parameter } from "../components/ParameterForm";
 import { JsonViewer } from "../components/JsonViewer";
 import { StatusBadge } from "../components/StatusBadge";
 import { TraceTree } from "../components/TraceTree";
+import { EventFeed } from "../components/EventFeed";
 import { SdkExamples } from "../components/SdkExamples";
 import { formatDuration, formatCost } from "../lib/utils";
 import { agentExecuteExamples } from "../lib/sdk-examples";
@@ -44,6 +45,8 @@ export function AgentDetail({ id, navigate }: AgentDetailProps) {
   const { agent, loading, error, fetch } = useAgentDetail(id);
   const {
     result: execResult,
+    events: execEvents,
+    executionId: execId,
     loading: executing,
     error: execError,
     execute,
@@ -178,6 +181,8 @@ export function AgentDetail({ id, navigate }: AgentDetailProps) {
             buttonLabel="Execute"
             error={execError}
           />
+
+          <EventFeed events={execEvents} streaming={executing} executionId={execId} />
 
           {execResult && (
             <div

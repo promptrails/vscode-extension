@@ -73,9 +73,7 @@ export class PanelManager {
           return this.proxyCall(msg.type, async (sdk) => sdk.agents.get(msg.id));
 
         case "executeAgent":
-          return this.proxyCall(msg.type, async (sdk) =>
-            sdk.agents.execute(msg.agentId, { input: msg.input, sync: true }),
-          );
+          return this.streamAgentExecution(msg.agentId, msg.input);
 
         case "getAgentVersions":
           return this.proxyCall(msg.type, async (sdk) =>
@@ -148,6 +146,93 @@ export class PanelManager {
         requestType: msg.type,
         data: null,
         error: err instanceof Error ? err.message : String(err),
+      });
+    }
+  }
+
+  /**
+   * Runs an agent in async mode and streams the SSE event feed to the
+   * webview so the user sees thinking / tool calls / content deltas as
+   * they happen. On terminal events (done / error) we post a final
+   * "response" to satisfy the webview's pending request promise with a
+   * synthesized ExecutionResult.
+   */
+  private async streamAgentExecution(
+    agentId: string,
+    input: Record<string, unknown>,
+  ): Promise<void> {
+    const sdk = await getClient(this.context.secrets);
+    if (!sdk) {
+      this.postMessage({
+        type: "response",
+        requestType: "executeAgent",
+        data: null,
+        error: "Not authenticated. Please set your API key.",
+      });
+      return;
+    }
+
+    let executionId: string | undefined;
+    let traceId: string | undefined;
+    try {
+      const started = await sdk.agents.execute(agentId, {
+        input,
+        sync: false,
+      });
+      executionId = started.execution_id;
+      traceId = started.trace_id;
+      if (!executionId) {
+        throw new Error("backend did not return an execution_id");
+      }
+
+      this.postMessage({
+        type: "executionStarted",
+        executionId,
+        traceId,
+      });
+
+      let finalOutput: unknown = started.output;
+      let finalTokenUsage: unknown = started.token_usage;
+      let streamError: string | undefined;
+
+      for await (const event of sdk.executions.stream(executionId)) {
+        this.postMessage({ type: "executionEvent", event });
+        if (event.type === "done") {
+          finalOutput = event.output ?? finalOutput;
+          finalTokenUsage = event.tokenUsage ?? finalTokenUsage;
+        } else if (event.type === "error") {
+          streamError = event.message;
+        }
+      }
+
+      if (streamError) {
+        this.postMessage({
+          type: "response",
+          requestType: "executeAgent",
+          data: null,
+          error: streamError,
+        });
+        return;
+      }
+
+      this.postMessage({
+        type: "response",
+        requestType: "executeAgent",
+        data: {
+          execution_id: executionId,
+          trace_id: traceId,
+          status: "completed",
+          output: finalOutput,
+          token_usage: finalTokenUsage,
+        },
+      });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      this.postMessage({
+        type: "response",
+        requestType: "executeAgent",
+        data: null,
+        error: message,
       });
     }
   }

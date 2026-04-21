@@ -30,6 +30,14 @@ export type WebviewMessage =
   | { type: "getAuthStatus" };
 
 // Extension → Webview (responses)
+import type { StreamEvent } from "@promptrails/sdk";
+
 export type ExtensionMessage =
   | { type: "response"; requestType: string; data: unknown; error?: string }
-  | { type: "authStatus"; connected: boolean; apiUrl: string };
+  | { type: "authStatus"; connected: boolean; apiUrl: string }
+  | {
+      type: "executionStarted";
+      executionId: string;
+      traceId?: string;
+    }
+  | { type: "executionEvent"; event: StreamEvent };
