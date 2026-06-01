@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+- Update `@promptrails/sdk` to 0.5.0 (langrails v0.7 model capabilities, run feature toggles, cache token usage)
+
 ## 0.1.0
 
 - Initial release
