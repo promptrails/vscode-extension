@@ -9,7 +9,7 @@
 - Version view reads model/tools from the agent version's `model_config`/`tools` fields instead of `config`.
 - Trace span kinds updated (`workflow`/`prompt` replace `chain`).
 - Removed features backed by deleted SDK resources (prompt run, costs, scores, media, templates, dashboard, sessions).
-- **Temporary:** `@promptrails/sdk` is pinned to the local sibling via `file:../javascript-sdk` until v0.9.0 is published on npm — must be repinned to the published version at release (see README).
+- **Temporary:** `@promptrails/sdk` declares the published spec `^0.9.0`, but that version is not yet on npm, so the committed `package-lock.json` is intentionally left referencing the previous published version — it will be reconciled by `npm install` once 0.9.0 ships. For local dev, link the sibling repo with `npm link ../javascript-sdk` (see README).
 
 ## 0.2.1
 

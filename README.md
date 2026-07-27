@@ -43,19 +43,25 @@ npm run compile
 # Press F5 in VS Code to launch Extension Development Host
 ```
 
-> **⚠️ TEMPORARY dependency — must be repinned before release.**
-> This branch (`feat/api-v2`) builds against the unreleased `@promptrails/sdk`
-> v0.9.0 via a local file link:
-> `"@promptrails/sdk": "file:../javascript-sdk"` (the `feat/api-v2` branch of
-> the sibling `javascript-sdk` repo). Build the SDK first:
+> **⚠️ API v2 against an unpublished SDK — the lockfile is intentionally stale.**
+> This branch (`feat/api-v2`) targets `@promptrails/sdk` **v0.9.0**, which is
+> not on npm yet. `package.json` already declares the normal published spec
+> (`"@promptrails/sdk": "^0.9.0"`) — **no machine-specific `file:` path is
+> committed.** Because 0.9.0 is unpublished, the committed `package-lock.json`
+> is deliberately left referencing the previous published version; it will be
+> reconciled automatically by `npm install` once 0.9.0 ships to npm.
+>
+> For local development against the sibling `javascript-sdk` repo (its
+> `feat/api-v2` branch), build the SDK and link it (the link is **not**
+> committed and does not touch `package.json`/`package-lock.json`):
 >
 > ```bash
 > cd ../javascript-sdk && npm ci && npm run build
-> cd ../vscode-extension && npm install
+> cd ../vscode-extension && npm link ../javascript-sdk
 > ```
 >
-> At the coordinated release, **repin this to the published npm version**
-> (e.g. `"@promptrails/sdk": "^0.9.0"`) and re-run `npm install`.
+> At the coordinated release, once `@promptrails/sdk` v0.9.0 is published,
+> run `npm install` to regenerate the lockfile against the registry.
 
 ## License
 
