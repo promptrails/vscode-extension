@@ -1,12 +1,11 @@
-import { useEffect, useMemo } from "react";
-import { usePromptDetail, useRunPrompt } from "../hooks/usePrompts";
-import { ParameterForm } from "../components/ParameterForm";
-import type { Parameter } from "../components/ParameterForm";
-import { JsonViewer } from "../components/JsonViewer";
-import { SdkExamples } from "../components/SdkExamples";
-import { promptRunExamples } from "../lib/sdk-examples";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { View } from "../App";
+import { JsonViewer } from "../components/JsonViewer";
+import type { Parameter } from "../components/ParameterForm";
+import { ParameterForm } from "../components/ParameterForm";
+import { SdkExamples } from "../components/SdkExamples";
+import { usePreviewPrompt, usePromptDetail } from "../hooks/usePrompts";
+import { promptPreviewExamples } from "../lib/sdk-examples";
 
 interface PromptDetailProps {
   id: string;
@@ -15,8 +14,13 @@ interface PromptDetailProps {
 
 export function PromptDetail({ id, navigate }: PromptDetailProps) {
   const { prompt, loading, error, fetch } = usePromptDetail(id);
-  const { result: runResult, loading: running, error: runError, run } = useRunPrompt();
-  const [tab, setTab] = useState<"run" | "sdk">("run");
+  const {
+    result: previewResult,
+    loading: previewing,
+    error: previewError,
+    preview,
+  } = usePreviewPrompt();
+  const [tab, setTab] = useState<"preview" | "sdk">("preview");
 
   useEffect(() => {
     fetch();
@@ -33,10 +37,11 @@ export function PromptDetail({ id, navigate }: PromptDetailProps) {
     return [];
   }, [prompt]);
 
-  const handleRun = (values: Record<string, unknown>) => {
-    const cv = prompt?.current_version;
-    const modelId = cv?.llm_model_id || prompt?.llm_model_id || prompt?.model || "";
-    run(id, ".", modelId, values);
+  // In API v2 a prompt version is content-only — model, sampling and tools
+  // live on the agent version. Rendering the template (preview) is the only
+  // standalone prompt action.
+  const handlePreview = (values: Record<string, unknown>) => {
+    preview(id, values);
   };
 
   if (loading) return <div className="p-4 text-xs text-muted">Loading...</div>;
@@ -44,7 +49,6 @@ export function PromptDetail({ id, navigate }: PromptDetailProps) {
   if (!prompt) return null;
 
   const cv = prompt.current_version;
-  const modelName = cv?.llm_model_id || prompt.llm_model_id || prompt.model || "";
   const systemPrompt = cv?.system_prompt || "";
   const userPrompt = cv?.user_prompt || "";
 
@@ -55,10 +59,7 @@ export function PromptDetail({ id, navigate }: PromptDetailProps) {
         <div>
           <h2 className="text-lg font-semibold">{prompt.name}</h2>
           <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted">
-            {modelName && <span className="badge">{modelName}</span>}
-            {cv?.temperature != null && <span>temp: {cv.temperature}</span>}
-            {cv?.max_tokens != null && <span>max: {cv.max_tokens}</span>}
-            {prompt.status && <span className="badge">{prompt.status}</span>}
+            {cv?.version && <span className="badge">v{cv.version}</span>}
           </div>
         </div>
         <button
@@ -84,27 +85,6 @@ export function PromptDetail({ id, navigate }: PromptDetailProps) {
           <div>
             <span className="font-medium text-muted">Description: </span>
             <span className="text-fg">{prompt.description}</span>
-          </div>
-        )}
-        {modelName && (
-          <div>
-            <span className="font-medium text-muted">Model: </span>
-            <span className="text-fg">{modelName}</span>
-            {cv?.llm_model?.name && (
-              <span className="text-muted"> ({cv.llm_model.name})</span>
-            )}
-          </div>
-        )}
-        {cv?.temperature != null && (
-          <div>
-            <span className="font-medium text-muted">Temperature: </span>
-            <span className="text-fg">{cv.temperature}</span>
-          </div>
-        )}
-        {cv?.max_tokens != null && (
-          <div>
-            <span className="font-medium text-muted">Max Tokens: </span>
-            <span className="text-fg">{cv.max_tokens}</span>
           </div>
         )}
         {cv && (
@@ -156,7 +136,7 @@ export function PromptDetail({ id, navigate }: PromptDetailProps) {
 
       {/* Tabs */}
       <div className="flex gap-1 border-b" style={{ borderColor: "var(--border)" }}>
-        {(["run", "sdk"] as const).map((t) => (
+        {(["preview", "sdk"] as const).map((t) => (
           <button
             key={t}
             className={`px-3 py-1.5 text-xs capitalize ${
@@ -165,46 +145,35 @@ export function PromptDetail({ id, navigate }: PromptDetailProps) {
             style={tab === t ? { borderColor: "var(--accent)" } : {}}
             onClick={() => setTab(t)}
           >
-            {t === "sdk" ? "SDK Examples" : t}
+            {t === "sdk" ? "SDK Examples" : "Preview"}
           </button>
         ))}
       </div>
 
-      {/* Run Tab */}
-      {tab === "run" && (
+      {/* Preview Tab — renders the template with the given inputs */}
+      {tab === "preview" && (
         <div className="space-y-3">
           <ParameterForm
             parameters={parameters}
-            onSubmit={handleRun}
-            loading={running}
-            buttonLabel="Run"
-            error={runError}
+            onSubmit={handlePreview}
+            loading={previewing}
+            buttonLabel="Render Preview"
+            error={previewError}
           />
-          {runResult && (
+          {previewResult && (
             <div
               className="space-y-2 rounded border p-3"
               style={{ borderColor: "var(--border)" }}
             >
-              <div className="flex items-center gap-3 text-xs text-muted">
-                <span className="font-medium text-fg">Output</span>
-                {runResult.duration_ms && <span>{runResult.duration_ms}ms</span>}
-                {runResult.cost != null && <span>${runResult.cost.toFixed(4)}</span>}
-                {runResult.model && <span>{runResult.model}</span>}
-              </div>
-              {runResult.content ? (
-                <pre className="max-h-60 overflow-auto whitespace-pre-wrap rounded bg-input p-3 text-xs">
-                  {runResult.content}
-                </pre>
-              ) : (
-                <JsonViewer data={runResult} label="Result" />
-              )}
+              <div className="text-xs font-medium text-fg">Rendered Template</div>
+              <JsonViewer data={previewResult} label="Preview" />
             </div>
           )}
         </div>
       )}
 
       {/* SDK Examples Tab */}
-      {tab === "sdk" && <SdkExamples examples={promptRunExamples(id)} />}
+      {tab === "sdk" && <SdkExamples examples={promptPreviewExamples(id)} />}
     </div>
   );
 }

@@ -46,15 +46,15 @@ func main() {
   };
 }
 
-export function promptRunExamples(promptId: string): Record<Lang, string> {
+export function promptPreviewExamples(promptId: string): Record<Lang, string> {
   return {
     javascript: `import { PromptRails } from "@promptrails/sdk";
 
 const client = new PromptRails({ apiKey: "YOUR_API_KEY" });
 
-const result = await client.prompts.runPrompt("${promptId}", {
-  user_prompt: "Hello, how are you?",
-  llm_model_id: "MODEL_ID",
+// Prompt versions are content-only in API v2 — render the template with inputs.
+const result = await client.prompts.preview("${promptId}", {
+  input: { name: "World" },
 });
 
 console.log(result);`,
@@ -63,10 +63,9 @@ console.log(result);`,
 
 client = PromptRails(api_key="YOUR_API_KEY")
 
-result = client.prompts.run(
+result = client.prompts.preview(
     "${promptId}",
-    user_prompt="Hello, how are you?",
-    llm_model_id="MODEL_ID",
+    input={"name": "World"},
 )
 
 print(result)`,
@@ -78,16 +77,15 @@ import "github.com/promptrails/promptrails-go"
 func main() {
     client := promptrails.New("YOUR_API_KEY")
 
-    result, err := client.Prompts.Run("${promptId}", promptrails.RunPromptRequest{
-        UserPrompt: "Hello, how are you?",
-        LLMModelID: "MODEL_ID",
+    result, err := client.Prompts.Preview("${promptId}", map[string]interface{}{
+        "input": map[string]interface{}{"name": "World"},
     })
 }`,
 
-    curl: `curl -X POST https://api.promptrails.ai/api/v1/prompts/${promptId}/run \\
+    curl: `curl -X POST https://api.promptrails.ai/api/v1/prompts/${promptId}/preview \\
   -H "Content-Type: application/json" \\
   -H "X-API-Key: YOUR_API_KEY" \\
-  -d '{"user_prompt": "Hello, how are you?", "llm_model_id": "MODEL_ID"}'`,
+  -d '{"input": {"name": "World"}}'`,
   };
 }
 

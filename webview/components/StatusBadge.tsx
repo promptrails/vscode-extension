@@ -13,21 +13,21 @@ const statusConfig: Record<string, { label: string; className: string }> = {
     label: "Running",
     className: "bg-blue-800/40 text-blue-300",
   },
-  awaiting_approval: {
-    label: "Awaiting Approval",
+  waiting_approval: {
+    label: "Waiting Approval",
     className: "bg-amber-800/40 text-amber-300",
   },
-  rejected: {
-    label: "Rejected",
-    className: "bg-red-800/40 text-red-300",
+  cancel_requested: {
+    label: "Cancelling",
+    className: "bg-amber-800/40 text-amber-300",
+  },
+  cancelled: {
+    label: "Cancelled",
+    className: "bg-gray-800/40 text-gray-300",
   },
   pending: {
     label: "Pending",
     className: "bg-amber-800/40 text-amber-300",
-  },
-  approved: {
-    label: "Approved",
-    className: "bg-green-800/40 text-green-300",
   },
 };
 

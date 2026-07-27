@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect } from "react";
 import type { StreamEvent } from "@promptrails/sdk";
-import { request, onMessage } from "../vscode";
+import { useCallback, useEffect, useState } from "react";
+import { onMessage, request } from "../vscode";
 
 export function useAgentDetail(id: string) {
   const [agent, setAgent] = useState<any>(null);
@@ -59,7 +59,17 @@ export function useExecuteAgent() {
     }
   }, []);
 
-  return { result, events, executionId, loading, error, execute };
+  // Cooperative cancel of an in-flight execution (API v2 executions.cancel).
+  // The backend finalizes the run, which ends the SSE stream normally.
+  const cancel = useCallback(async (id: string) => {
+    try {
+      await request({ type: "cancelExecution", executionId: id });
+    } catch (err: any) {
+      setError(err.message);
+    }
+  }, []);
+
+  return { result, events, executionId, loading, error, execute, cancel };
 }
 
 export function useAgentVersions(agentId: string) {

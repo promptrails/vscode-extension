@@ -1,16 +1,16 @@
-import { useEffect, useState, useMemo } from "react";
-import { useAgentDetail, useExecuteAgent } from "../hooks/useAgents";
-import { ParameterForm } from "../components/ParameterForm";
-import type { Parameter } from "../components/ParameterForm";
+import { useEffect, useMemo, useState } from "react";
+import type { View } from "../App";
+import { EventFeed } from "../components/EventFeed";
 import { JsonViewer } from "../components/JsonViewer";
+import type { Parameter } from "../components/ParameterForm";
+import { ParameterForm } from "../components/ParameterForm";
+import { SdkExamples } from "../components/SdkExamples";
 import { StatusBadge } from "../components/StatusBadge";
 import { TraceTree } from "../components/TraceTree";
-import { EventFeed } from "../components/EventFeed";
-import { SdkExamples } from "../components/SdkExamples";
-import { formatDuration, formatCost } from "../lib/utils";
+import { useAgentDetail, useExecuteAgent } from "../hooks/useAgents";
 import { agentExecuteExamples } from "../lib/sdk-examples";
+import { formatCost, formatDuration } from "../lib/utils";
 import { request } from "../vscode";
-import type { View } from "../App";
 
 interface AgentDetailProps {
   id: string;
@@ -50,6 +50,7 @@ export function AgentDetail({ id, navigate }: AgentDetailProps) {
     loading: executing,
     error: execError,
     execute,
+    cancel,
   } = useExecuteAgent();
   const [traces, setTraces] = useState<any[]>([]);
   const [tab, setTab] = useState<"execute" | "sdk">("execute");
@@ -181,6 +182,14 @@ export function AgentDetail({ id, navigate }: AgentDetailProps) {
             buttonLabel="Execute"
             error={execError}
           />
+
+          {executing && execId && (
+            <div className="flex justify-end">
+              <button className="btn-secondary text-xs" onClick={() => cancel(execId)}>
+                Cancel Execution
+              </button>
+            </div>
+          )}
 
           <EventFeed events={execEvents} streaming={executing} executionId={execId} />
 

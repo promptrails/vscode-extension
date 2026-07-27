@@ -8,11 +8,13 @@ Install from the [VS Code Marketplace](https://marketplace.visualstudio.com/item
 
 ## Features
 
-- **Agents** — Execute agents with JSON input, view output and trace trees
-- **Prompts** — Run prompts and preview rendered templates
+- **Agents** — Execute `agent` and `workflow` agents with JSON input, stream the live event feed, cancel in-flight runs, and view execution/trace trees
+- **Prompts** — Inspect content-only prompts and render template previews with inputs
 - **Data Sources** — Query data sources and test connections
-- **Versions** — View version history and promote versions
+- **Versions** — View version history (model/tools live on the agent version in API v2) and promote versions
 - **Secure** — API keys stored in VS Code's SecretStorage
+
+This extension targets the PromptRails **API v2** (two agent kinds — `agent` and `workflow` — execution trees, and human-in-the-loop approvals).
 
 ## Getting Started
 
@@ -40,6 +42,20 @@ npm install
 npm run compile
 # Press F5 in VS Code to launch Extension Development Host
 ```
+
+> **⚠️ TEMPORARY dependency — must be repinned before release.**
+> This branch (`feat/api-v2`) builds against the unreleased `@promptrails/sdk`
+> v0.9.0 via a local file link:
+> `"@promptrails/sdk": "file:../javascript-sdk"` (the `feat/api-v2` branch of
+> the sibling `javascript-sdk` repo). Build the SDK first:
+>
+> ```bash
+> cd ../javascript-sdk && npm ci && npm run build
+> cd ../vscode-extension && npm install
+> ```
+>
+> At the coordinated release, **repin this to the published npm version**
+> (e.g. `"@promptrails/sdk": "^0.9.0"`) and re-run `npm install`.
 
 ## License
 
