@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import { request } from "../vscode";
 
 export function usePromptDetail(id: string) {
@@ -22,28 +22,22 @@ export function usePromptDetail(id: string) {
   return { prompt, loading, error, fetch };
 }
 
-export function useRunPrompt() {
+export function usePreviewPrompt() {
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const run = useCallback(
-    async (
-      promptId: string,
-      userPrompt: string,
-      llmModelId?: string,
-      input?: Record<string, unknown>,
-    ) => {
+  const preview = useCallback(
+    async (promptId: string, input?: Record<string, unknown>, versionId?: string) => {
       setLoading(true);
       setError(null);
       setResult(null);
       try {
         const data = await request<any>({
-          type: "runPrompt",
+          type: "previewPrompt",
           promptId,
-          userPrompt,
-          llmModelId,
           input,
+          versionId,
         });
         setResult(data);
       } catch (err: any) {
@@ -55,7 +49,7 @@ export function useRunPrompt() {
     [],
   );
 
-  return { result, loading, error, run };
+  return { result, loading, error, preview };
 }
 
 export function usePromptVersions(promptId: string) {

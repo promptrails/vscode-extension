@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { request } from "../vscode";
-import { SidebarSection } from "./SidebarSection";
-import { SidebarItem } from "./SidebarItem";
+import { useEffect, useState } from "react";
 import type { View } from "../App";
+import { request } from "../vscode";
+import { SidebarItem } from "./SidebarItem";
+import { SidebarSection } from "./SidebarSection";
 
 interface SidebarProps {
   connected: boolean;
@@ -19,7 +19,6 @@ interface Agent {
 interface Prompt {
   id: string;
   name: string;
-  model: string;
 }
 
 interface DataSource {
@@ -116,7 +115,6 @@ export function Sidebar({ connected, currentView, navigate }: SidebarProps) {
               <SidebarItem
                 key={p.id}
                 label={p.name}
-                badge={p.model}
                 active={isActive("prompt", p.id)}
                 onClick={() => navigate({ page: "prompt", id: p.id })}
               />

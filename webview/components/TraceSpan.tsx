@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { formatDuration, formatCost, formatTokens, cn } from "../lib/utils";
+import { cn, formatCost, formatDuration, formatTokens } from "../lib/utils";
 
 interface TraceSpanProps {
   trace: {
@@ -23,8 +23,9 @@ interface TraceSpanProps {
 
 const kindColors: Record<string, string> = {
   llm: "bg-purple-800/40 text-purple-300",
+  prompt: "bg-purple-800/40 text-purple-300",
   tool: "bg-blue-800/40 text-blue-300",
-  chain: "bg-cyan-800/40 text-cyan-300",
+  workflow: "bg-cyan-800/40 text-cyan-300",
   agent: "bg-indigo-800/40 text-indigo-300",
   retrieval: "bg-teal-800/40 text-teal-300",
 };

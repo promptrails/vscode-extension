@@ -8,11 +8,10 @@ export type WebviewMessage =
   | { type: "getPrompts"; page: number }
   | { type: "getPrompt"; id: string }
   | {
-      type: "runPrompt";
+      type: "previewPrompt";
       promptId: string;
-      userPrompt: string;
-      llmModelId?: string;
       input?: Record<string, unknown>;
+      versionId?: string;
     }
   | { type: "getPromptVersions"; promptId: string }
   | { type: "promotePromptVersion"; promptId: string; versionId: string }
@@ -26,6 +25,7 @@ export type WebviewMessage =
       versionId: string;
     }
   | { type: "getTraces"; traceId: string }
+  | { type: "cancelExecution"; executionId: string }
   | { type: "setApiKey"; key: string }
   | { type: "getAuthStatus" };
 

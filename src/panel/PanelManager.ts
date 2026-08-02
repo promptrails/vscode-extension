@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { getClient, setApiKey, getApiKey, getApiUrl } from "../client";
+import { getApiKey, getApiUrl, getClient, setApiKey } from "../client";
+import type { ExtensionMessage, WebviewMessage } from "../messages";
 import { getHtml } from "./getHtml";
-import type { WebviewMessage, ExtensionMessage } from "../messages";
 
 export class PanelManager {
   private static instance: PanelManager | undefined;
@@ -93,12 +93,11 @@ export class PanelManager {
         case "getPrompt":
           return this.proxyCall(msg.type, async (sdk) => sdk.prompts.get(msg.id));
 
-        case "runPrompt":
+        case "previewPrompt":
           return this.proxyCall(msg.type, async (sdk) =>
-            sdk.prompts.runPrompt(msg.promptId, {
-              user_prompt: msg.userPrompt,
-              llm_model_id: msg.llmModelId || "",
-              ...(msg.input ? { input: msg.input } : {}),
+            sdk.prompts.preview(msg.promptId, {
+              input: msg.input ?? {},
+              ...(msg.versionId ? { version_id: msg.versionId } : {}),
             }),
           );
 
@@ -138,6 +137,11 @@ export class PanelManager {
         case "getTraces":
           return this.proxyCall(msg.type, async (sdk) =>
             sdk.traces.getByTraceId(msg.traceId),
+          );
+
+        case "cancelExecution":
+          return this.proxyCall(msg.type, async (sdk) =>
+            sdk.executions.cancel(msg.executionId),
           );
       }
     } catch (err) {

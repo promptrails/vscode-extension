@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useAgentVersions } from "../hooks/useAgents";
-import { usePromptVersions } from "../hooks/usePrompts";
-import { useDataSourceVersions } from "../hooks/useDataSources";
-import { JsonViewer } from "../components/JsonViewer";
-import { timeAgo } from "../lib/utils";
 import type { View } from "../App";
+import { JsonViewer } from "../components/JsonViewer";
+import { useAgentVersions } from "../hooks/useAgents";
+import { useDataSourceVersions } from "../hooks/useDataSources";
+import { usePromptVersions } from "../hooks/usePrompts";
+import { timeAgo } from "../lib/utils";
 
 interface VersionListProps {
   resourceType: "agent" | "prompt" | "dataSource";
@@ -17,14 +17,19 @@ function VersionCard({ v, onPromote }: { v: any; onPromote: (id: string) => void
   const [expanded, setExpanded] = useState(v.is_current);
   const config = v.config || {};
 
-  // Extract key fields from config for quick preview
-  const model = config.model || config.llm_model_id;
-  const systemPrompt = config.system_prompt;
-  const temperature = config.temperature;
-  const maxTokens = config.max_tokens;
-  const tools = config.tools;
+  // API v2: model/sampling/tools live on the agent version itself
+  // (model_config, tools[]), not inside `config`. Prompt versions are
+  // content-only, so these are simply absent there.
+  const modelConfig = v.model_config || {};
+  const model = modelConfig.model_id;
+  const systemPrompt = v.system_prompt || config.system_prompt;
+  const temperature = modelConfig.temperature;
+  const maxTokens = modelConfig.max_tokens;
+  const tools = Array.isArray(v.tools)
+    ? v.tools.map((t: any) => t.mcp_tool_id ?? t)
+    : undefined;
   const description = v.description || config.description;
-  const changeNotes = v.change_notes || v.notes;
+  const changeNotes = v.message || v.change_notes || v.notes;
 
   return (
     <div
