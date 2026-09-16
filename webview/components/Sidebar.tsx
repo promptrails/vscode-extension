@@ -46,6 +46,13 @@ export function Sidebar({ connected, currentView, navigate }: SidebarProps) {
 
     let cancelled = false;
     const load = async () => {
+      // Inside load(), not in the effect body: setting state synchronously
+      // while the effect runs schedules a second render before the first has
+      // painted, which is what react-hooks/set-state-in-effect flags. Here they
+      // are still the first thing that happens, so the spinner and the cleared
+      // error appear exactly as before.
+      setLoading(true);
+      setError(null);
       try {
         const [agentsRes, promptsRes, dsRes] = await Promise.all([
           request<any>({ type: "getAgents", page: 1 }),
@@ -62,8 +69,6 @@ export function Sidebar({ connected, currentView, navigate }: SidebarProps) {
         if (!cancelled) setLoading(false);
       }
     };
-    setLoading(true);
-    setError(null);
     load();
     return () => {
       cancelled = true;
