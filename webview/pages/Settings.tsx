@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { postMessage, onMessage } from "../vscode";
+import { useEffect, useState } from "react";
+import { onMessage, postMessage } from "../vscode";
 
 export function Settings() {
   const [apiKey, setApiKey] = useState("");

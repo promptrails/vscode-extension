@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { PanelManager } from "./panel/PanelManager";
-import { registerAuthCommands } from "./commands/auth";
 import { resetClient } from "./client";
+import { registerAuthCommands } from "./commands/auth";
+import { PanelManager } from "./panel/PanelManager";
 
 export function activate(context: vscode.ExtensionContext): void {
   const panelManager = PanelManager.getInstance(context);

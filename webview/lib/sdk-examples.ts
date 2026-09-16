@@ -2,7 +2,7 @@ type Lang = "javascript" | "python" | "go" | "curl";
 
 export function agentExecuteExamples(
   agentId: string,
-  agentName: string,
+  _agentName: string,
   inputJson: string,
 ): Record<Lang, string> {
   return {

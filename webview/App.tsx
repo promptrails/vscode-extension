@@ -1,13 +1,13 @@
-import { useState, useEffect, useCallback } from "react";
-import { postMessage, onMessage } from "./vscode";
+import { useCallback, useEffect, useState } from "react";
 import { Sidebar } from "./components/Sidebar";
 import { StatusBar } from "./components/StatusBar";
-import { Settings } from "./pages/Settings";
-import { Welcome } from "./pages/Welcome";
 import { AgentDetail } from "./pages/AgentDetail";
-import { PromptDetail } from "./pages/PromptDetail";
 import { DataSourceDetail } from "./pages/DataSourceDetail";
+import { PromptDetail } from "./pages/PromptDetail";
+import { Settings } from "./pages/Settings";
 import { VersionList } from "./pages/VersionList";
+import { Welcome } from "./pages/Welcome";
+import { onMessage, postMessage } from "./vscode";
 
 export type View =
   | { page: "welcome" }

@@ -1,12 +1,12 @@
-import { useEffect, useState, useMemo } from "react";
-import { useDataSourceDetail, useQueryDataSource } from "../hooks/useDataSources";
-import { ParameterForm } from "../components/ParameterForm";
-import type { Parameter } from "../components/ParameterForm";
+import { useEffect, useMemo, useState } from "react";
+import type { View } from "../App";
 import { JsonViewer } from "../components/JsonViewer";
+import type { Parameter } from "../components/ParameterForm";
+import { ParameterForm } from "../components/ParameterForm";
 import { ResultTable } from "../components/ResultTable";
 import { SdkExamples } from "../components/SdkExamples";
+import { useDataSourceDetail, useQueryDataSource } from "../hooks/useDataSources";
 import { dataSourceQueryExamples } from "../lib/sdk-examples";
-import type { View } from "../App";
 
 interface DataSourceDetailProps {
   id: string;
@@ -49,8 +49,7 @@ export function DataSourceDetail({ id, navigate }: DataSourceDetailProps) {
 
   // Detect { columns, rows } format from backend
   const hasRowsFormat =
-    queryResult &&
-    queryResult.rows &&
+    queryResult?.rows &&
     Array.isArray(queryResult.rows) &&
     queryResult.columns &&
     Array.isArray(queryResult.columns);

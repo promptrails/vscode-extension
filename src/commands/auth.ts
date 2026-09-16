@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { setApiKey, clearApiKey } from "../client";
+import { clearApiKey, setApiKey } from "../client";
 
 export function registerAuthCommands(
   context: vscode.ExtensionContext,

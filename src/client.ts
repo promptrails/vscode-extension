@@ -1,5 +1,5 @@
-import * as vscode from "vscode";
 import { PromptRails } from "@promptrails/sdk";
+import * as vscode from "vscode";
 import { CONFIG, SECRETS } from "./constants";
 
 let client: PromptRails | null = null;
