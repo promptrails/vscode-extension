@@ -29,6 +29,14 @@ updates:
         patterns:
           - "*"
     ignore:
+      # @types/vscode is not a dependency choice, it is the declaration of which
+      # VS Code versions this extension runs on: it must match engines.vscode,
+      # and raising it drops support for every editor below the new floor. The
+      # bump that prompted this proposed ^1.137.0 against engines ^1.85.0, which
+      # the toolchain rejects outright. Move both together, by hand, when
+      # dropping old editors is the actual intent.
+      - dependency-name: "@types/vscode"
+
       # No major version pull requests. A major is a migration, not an update —
       # it wants reading, and a queue of them is a queue nobody reads.
       #
