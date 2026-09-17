@@ -2,7 +2,7 @@
   "name": "promptrails",
   "displayName": "PromptRails",
   "description": "Run agents, test prompts, query data sources, and manage versions — all from VS Code.",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "promptrails",
   "license": "MIT",
   "repository": {
