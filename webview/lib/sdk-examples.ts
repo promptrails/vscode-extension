@@ -22,7 +22,7 @@ client = PromptRails(api_key="YOUR_API_KEY")
 
 result = client.agents.execute(
     "${agentId}",
-    input=${inputJson.replace(/"/g, "'").replace(/: /g, ": ")},
+    input=${inputJson.replace(/"/g, "'")},
 )
 
 print(result)`,
