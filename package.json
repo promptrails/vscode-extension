@@ -94,13 +94,13 @@
     "publish": "vsce publish"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.14",
+    "@biomejs/biome": "2.5.15",
     "@types/node": "^20.19.43",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "@types/vscode": "^1.85.0",
     "@types/vscode-webview": "^1.57.4",
-    "@typescript-eslint/parser": "^8.70.1",
+    "@typescript-eslint/parser": "^8.71.0",
     "@vscode/vsce": "^4.0.0",
     "autoprefixer": "^10.6.1",
     "concurrently": "^8.2.2",
