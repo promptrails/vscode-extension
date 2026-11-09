@@ -94,7 +94,7 @@
     "publish": "vsce publish"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.6.4",
+    "@biomejs/biome": "2.6.5",
     "@types/node": "^20.19.43",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
@@ -105,7 +105,7 @@
     "autoprefixer": "^10.6.2",
     "concurrently": "^8.2.2",
     "esbuild": "^0.28.2",
-    "eslint": "^10.13.0",
+    "eslint": "^10.14.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "postcss": "^8.5.32",
     "tailwindcss": "^3.4.1",
